@@ -12,10 +12,14 @@ impl MyEngine {
         target_fps: u32
     ) -> Result<MyEngine, ErrorKind> {        
         match console_engine::ConsoleEngine::init(
-            width, height, target_fps
+            width*2, height, target_fps
         ) {
             Ok(val) => Ok(MyEngine{c_engine: val}),
             Err(e) => Err(e.kind())
         }
     }
+
+    pub fn wait_frame(&mut self) {
+        self.c_engine.wait_frame();
+    }    
 }
