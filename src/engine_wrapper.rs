@@ -70,7 +70,14 @@ impl Drawable for Pixel {
 }
 
 #[derive(Clone, Copy)]
-pub struct Position(i32, i32);
+pub struct Position(pub i32, pub i32);
+impl ops::Add<Position> for Position {
+    type Output = Position;
+
+    fn add(self, rhs: Position) -> Position {
+        Position(self.0+rhs.0, self.1+rhs.1)
+    }
+}
 
 pub trait Drawable {
     fn draw(&self, engine: &mut MyEngine);
