@@ -40,8 +40,8 @@ impl MyEngine {
     }
 
 
-    pub fn draw(&mut self, entity: &dyn Drawable) {
-        entity.draw(self);
+    pub fn draw(&mut self, drawable: &dyn Drawable) {
+        drawable.draw(self);
     }
     pub fn update_frame(&mut self) {
         self.c_engine.draw();
