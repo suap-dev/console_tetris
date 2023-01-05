@@ -2,8 +2,8 @@ use crate::engine_wrapper::{Drawable, MyEngine, Pixel, Position};
 use console_engine::Color;
 
 pub struct Tetronomino {
-    rotation: Rotation,
-    position: Position,
+    pub rotation: Rotation,
+    pub position: Position,
     pixel_positions: [[Position; 4]; 4],
     color: Color,
 }
@@ -11,9 +11,18 @@ impl Tetronomino {
     pub fn new() -> Tetronomino {
         Tetronomino{
             rotation: Rotation::Quarter,
-            position: Position(1, 1),
+            position: Position(4, 4),
             pixel_positions: I,
             color: Color::Red
+        }
+    }
+
+    pub fn rot_left(&mut self) {
+        self.rotation = match self.rotation {
+            Rotation::Default => Rotation::Quarter,
+            Rotation::Quarter => Rotation::Half,
+            Rotation::Half => Rotation::ThreeQuarters,
+            Rotation::ThreeQuarters => Rotation::Default,
         }
     }
 }
@@ -26,7 +35,7 @@ impl Drawable for Tetronomino {
 }
 
 #[derive(Clone, Copy)]
-enum Rotation {
+pub enum Rotation {
     Default = 0,
     Quarter = 1,
     Half = 2,
@@ -47,5 +56,5 @@ const I: [[Position; 4]; 4] = [
     [Position(-1,0), Position(0,0), Position(1,0), Position(2,0)],
     [Position(0,-2), Position(0,-1), Position(0,0), Position(0,1)],
     [Position(-2,0), Position(-1,0), Position(0,0), Position(1,0)],
-    [Position(0,1), Position(0,0), Position(0,-1), Position(0,-2)],
+    [Position(0,-1), Position(0,0), Position(0,1), Position(0,2)],
 ];
