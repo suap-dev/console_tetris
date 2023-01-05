@@ -1,5 +1,4 @@
 mod engine_wrapper;
-use console_engine::ConsoleEngine;
 use engine_wrapper::MyEngine;
 
 fn main() {
@@ -8,7 +7,13 @@ fn main() {
        Ok(my_engine) => eng = my_engine,
        Err(e) => panic!("We're having problems initialising the engine: {:?}", e)
     }
-    for _i in 0..20 {
+
+    let px = engine_wrapper::Pixel::default();
+
+    for _i in 0..45 {
+        eng.draw(&px);
+
+        eng.update_frame();
         eng.wait_frame();
     }
 }
