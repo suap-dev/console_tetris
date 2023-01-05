@@ -1,21 +1,16 @@
-use console_engine::{ConsoleEngine, pixel};
+use console_engine::{pixel, Color, ConsoleEngine};
 use std::io::ErrorKind;
 use std::result::Result;
+use std::ops;
 
 pub struct MyEngine {
-    c_engine: ConsoleEngine
+    c_engine: ConsoleEngine,
 }
 impl MyEngine {
-    pub fn init(
-        width: u32,
-        height: u32,
-        target_fps: u32
-    ) -> Result<MyEngine, ErrorKind> {        
-        match console_engine::ConsoleEngine::init(
-            width*2, height, target_fps
-        ) {
-            Ok(val) => Ok(MyEngine{c_engine: val}),
-            Err(e) => Err(e.kind())
+    pub fn init(width: u32, height: u32, target_fps: u32) -> Result<MyEngine, ErrorKind> {
+        match ConsoleEngine::init(width * 2, height, target_fps) {
+            Ok(val) => Ok(MyEngine { c_engine: val }),
+            Err(e) => Err(e.kind()),
         }
     }
 
@@ -23,22 +18,17 @@ impl MyEngine {
         self.c_engine.wait_frame();
     }
     pub fn set_pxl(&mut self, pixel: &Pixel) {
-        let x = pixel.position.0;
+        let x = pixel.position.0 * 2;
         let y = pixel.position.1;
         let fg = pixel.fg;
         let bg = pixel.bg;
-        let chars = pixel.chars;        
+        let chars = pixel.chars;
 
-        self.c_engine.set_pxl(
-            x, y,
-            pixel::pxl_fbg(chars[0], fg, bg)
-        );
-        self.c_engine.set_pxl(
-            x+1, y,
-            pixel::pxl_fbg(chars[1], fg, bg)
-        );
+        self.c_engine
+            .set_pxl(x, y, pixel::pxl_fbg(chars[0], fg, bg));
+        self.c_engine
+            .set_pxl(x + 1, y, pixel::pxl_fbg(chars[1], fg, bg));
     }
-
 
     pub fn draw(&mut self, drawable: &dyn Drawable) {
         drawable.draw(self);
@@ -49,19 +39,27 @@ impl MyEngine {
 }
 
 #[derive(Clone, Copy)]
-pub struct Pixel{
-    pub bg: console_engine::Color,
-    pub fg: console_engine::Color,
+pub struct Pixel {
+    pub bg: Color,
+    pub fg: Color,
     pub chars: [char; 2],
     pub position: Position,
 }
 impl Pixel {
-    pub fn default() -> Pixel{
-        Pixel{
-            bg: console_engine::Color::White,
-            fg: console_engine::Color::Black,
+    pub fn default() -> Pixel {
+        Pixel {
+            bg: Color::White,
+            fg: Color::Black,
             chars: [' ', ' '],
-            position: Position(0,0),
+            position: Position(0, 0),
+        }
+    }
+    pub fn position_color(position: Position, color: Color) -> Pixel {
+        Pixel {
+            bg: color,
+            fg: color,
+            chars: [' ', ' '],
+            position,
         }
     }
 }
@@ -77,6 +75,3 @@ pub struct Position(i32, i32);
 pub trait Drawable {
     fn draw(&self, engine: &mut MyEngine);
 }
-
-
-    
