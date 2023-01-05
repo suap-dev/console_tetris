@@ -14,6 +14,9 @@ impl MyEngine {
         }
     }
 
+    pub fn clear(&mut self) {
+        self.c_engine.clear_screen();
+    }
     pub fn wait_frame(&mut self) {
         self.c_engine.wait_frame();
     }
@@ -50,7 +53,7 @@ impl Pixel {
         Pixel {
             bg: Color::White,
             fg: Color::Black,
-            chars: [' ', ' '],
+            chars: ['[', ']'],
             position: Position(0, 0),
         }
     }
@@ -58,7 +61,7 @@ impl Pixel {
         Pixel {
             bg: color,
             fg: color,
-            chars: [' ', ' '],
+            chars: ['[', ']'],
             position,
         }
     }
