@@ -1,8 +1,10 @@
 mod engine_wrapper;
 mod tetronominoes;
+mod map;
 
 use engine_wrapper::{MyEngine, Pixel};
 use tetronominoes::Tetronomino;
+use map::Map;
 
 
 fn main() {
@@ -12,20 +14,16 @@ fn main() {
        Err(e) => panic!("We're having problems initialising the engine: {:?}", e)
     }
 
-    // let px: Pixel = Pixel::default();
     let mut tet: Tetronomino = Tetronomino::new();
-    // let mut shape: Vec<Pixel> = Vec::new();
-    // shape.push(px);
-    // let shape: Shape = Shape::from(shape);
+    let map: Map = Map{height: 10, width:10};
 
     for _i in 0..10 {
-        // tet.position.1 += 1;
 
         tet.rot_left();
 
         eng.clear();
 
-        // eng.draw(&px);
+        eng.draw(&map);
         eng.draw(&tet);
 
         eng.update_frame();
