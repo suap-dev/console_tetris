@@ -9,11 +9,11 @@ pub struct Tetronomino {
 }
 impl Tetronomino {
     pub fn new() -> Tetronomino {
-        Tetronomino{
+        Tetronomino {
             rotation: Rotation::Quarter,
             position: Position(4, 4),
             pixel_positions: I,
-            color: Color::Red
+            color: Color::Red,
         }
     }
 
@@ -29,7 +29,10 @@ impl Tetronomino {
 impl Drawable for Tetronomino {
     fn draw(&self, engine: &mut MyEngine) {
         for pixel_position in self.pixel_positions[self.rotation as usize] {
-            engine.draw(&Pixel::position_color(pixel_position+self.position, self.color));
+            engine.draw(&Pixel::position_color(
+                pixel_position + self.position,
+                self.color,
+            ));
         }
     }
 }
@@ -53,8 +56,28 @@ pub enum Kind {
 }
 
 const I: [[Position; 4]; 4] = [
-    [Position(-1,0), Position(0,0), Position(1,0), Position(2,0)],
-    [Position(0,-2), Position(0,-1), Position(0,0), Position(0,1)],
-    [Position(-2,0), Position(-1,0), Position(0,0), Position(1,0)],
-    [Position(0,-1), Position(0,0), Position(0,1), Position(0,2)],
+    [
+        Position(-1, 0),
+        Position(0, 0),
+        Position(1, 0),
+        Position(2, 0),
+    ],
+    [
+        Position(0, -2),
+        Position(0, -1),
+        Position(0, 0),
+        Position(0, 1),
+    ],
+    [
+        Position(-2, 0),
+        Position(-1, 0),
+        Position(0, 0),
+        Position(1, 0),
+    ],
+    [
+        Position(0, -1),
+        Position(0, 0),
+        Position(0, 1),
+        Position(0, 2),
+    ],
 ];

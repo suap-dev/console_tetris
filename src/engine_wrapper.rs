@@ -1,7 +1,7 @@
 use console_engine::{pixel, Color, ConsoleEngine};
 use std::io::ErrorKind;
-use std::result::Result;
 use std::ops;
+use std::result::Result;
 
 pub struct MyEngine {
     c_engine: ConsoleEngine,
@@ -78,7 +78,7 @@ impl ops::Add<Position> for Position {
     type Output = Position;
 
     fn add(self, rhs: Position) -> Position {
-        Position(self.0+rhs.0, self.1+rhs.1)
+        Position(self.0 + rhs.0, self.1 + rhs.1)
     }
 }
 
