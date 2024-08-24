@@ -16,13 +16,13 @@ use crate::{
 };
 
 fn main() {
-    let mut engine = match MyEngine::init(30, 20, 2) {
+    let mut engine = match MyEngine::init(30, 20, 1) {
         Ok(my_engine) => my_engine,
         Err(e) => panic!("We're having problems initialising the engine: {e}"),
     };
 
     let mut map = Map::empty(10, 10);
-    let mut tet = Tetronomino::new(vec2::vec2(2, 2));
+    let mut tet = Tetronomino::new(Variant::O, vec2::vec2(2, 2));
 
     loop {
         engine.clear_canvas();
@@ -35,6 +35,6 @@ fn main() {
 
         engine.process_input();
 
-        tet.rotate_left();
+        tet.rotate_right();
     }
 }

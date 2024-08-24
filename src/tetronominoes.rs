@@ -21,15 +21,15 @@ impl Shape for Tetronomino {
     }
 }
 impl Tetronomino {
-    pub fn new(origin: Vec2) -> Self {
+    pub fn new(variant: Variant, origin: Vec2) -> Self {
         Self {
-            variant: Variant::I,
+            variant,
             rotation: Rotation::Default,
             origin,
             color: Color::Blue,
         }
     }
-    pub fn rotate_left(&mut self) {
+    pub fn rotate_right(&mut self) {
         self.rotation = match self.rotation {
             Rotation::Default => Rotation::Quarter,
             Rotation::Quarter => Rotation::Half,
@@ -75,53 +75,53 @@ type PositionRelativeToOrigin = Vec2;
 
 // TODO: fill the other shapes
 const TETRONOMINOES: Variants = [
-    // I = 0
+    // I
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
         [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
         [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
     ],
-    // O = 1
+    // O
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(0, 0), vec2(-1, 0), vec2(-1, -1), vec2(0, -1)],
+        [vec2(1, 0), vec2(0, 0), vec2(0, -1), vec2(1, -1)],
+        [vec2(0, 0), vec2(1, 0), vec2(0, 1), vec2(1, 1)],
+        [vec2(-1, 0), vec2(0, 0), vec2(-1, 1), vec2(0, 1)],
     ],
-    // T = 2
+    // T
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(0, -1)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(1, 0)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(0, 1)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(-1, 0)],
     ],
-    // J = 3
+    // J
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(-1, 1), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-1, -1), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(1, -1)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(1, 1)],
     ],
-    // L = 4
+    // L
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(1, 1)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(-1, 1)],
+        [vec2(-1, -1), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(1, -1)],
     ],
-    // S = 5
+    // S
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(-1, 0), vec2(0, 0), vec2(0, -1), vec2(1, -1)],
+        [vec2(0, -1), vec2(0, 0), vec2(1, 0), vec2(1, 1)],
+        [vec2(0, 1), vec2(-1, 1), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, 0), vec2(-1, -1), vec2(-1, 0), vec2(0, 1)],
     ],
-    // Z = 6
+    // Z
     [
-        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
-        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
-        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
-        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+        [vec2(1, 0), vec2(0, -1), vec2(-1, -1), vec2(0, 0)],
+        [vec2(0, 1), vec2(1, 0), vec2(1, -1), vec2(0, 0)],
+        [vec2(1, 1), vec2(0, 0), vec2(-1, 0), vec2(0, 1)],
+        [vec2(-1, 1), vec2(0, 0), vec2(0, -1), vec2(-1, 0)],
     ],
 ];
