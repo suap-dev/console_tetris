@@ -1,23 +1,35 @@
-use crate::engine_wrapper::{Drawable, MyEngine, Pixel, Position};
+use std::slice::SliceIndex;
+
+use crate::my_engine::{shape::Shape, vec2::vec2, Drawable, MyEngine, Pixel, Vec2};
 use console_engine::Color;
 
 pub struct Tetronomino {
-    pub rotation: Rotation,
-    pub position: Position,
-    pixel_positions: [[Position; 4]; 4],
+    variant: Variant,
+    rotation: Rotation,
+    origin: Vec2,
     color: Color,
 }
-impl Tetronomino {
-    pub fn new() -> Tetronomino {
-        Tetronomino {
-            rotation: Rotation::Quarter,
-            position: Position(4, 4),
-            pixel_positions: I,
-            color: Color::Red,
-        }
+impl Shape for Tetronomino {
+    fn get_origin(&self) -> Vec2 {
+        self.origin
     }
 
-    pub fn rot_left(&mut self) {
+    fn get_segments(&self) -> &'static [Vec2; 4] {
+        let v: usize = self.variant.into();
+        let r: usize = self.rotation.into();
+        &TETRONOMINOES[v][r]
+    }
+}
+impl Tetronomino {
+    pub fn new(origin: Vec2) -> Self {
+        Self {
+            variant: Variant::I,
+            rotation: Rotation::Default,
+            origin,
+            color: Color::Blue,
+        }
+    }
+    pub fn rotate_left(&mut self) {
         self.rotation = match self.rotation {
             Rotation::Default => Rotation::Quarter,
             Rotation::Quarter => Rotation::Half,
@@ -26,26 +38,22 @@ impl Tetronomino {
         }
     }
 }
-impl Drawable for Tetronomino {
-    fn draw(&self, engine: &mut MyEngine) {
-        for pixel_position in self.pixel_positions[self.rotation as usize] {
-            engine.draw(&Pixel::position_color(
-                pixel_position + self.position,
-                self.color,
-            ));
-        }
+
+#[derive(Clone, Copy)]
+pub enum Rotation {
+    Default,
+    Quarter,
+    Half,
+    ThreeQuarters,
+}
+impl From<Rotation> for usize {
+    fn from(value: Rotation) -> Self {
+        value as usize
     }
 }
 
 #[derive(Clone, Copy)]
-pub enum Rotation {
-    Default = 0,
-    Quarter = 1,
-    Half = 2,
-    ThreeQuarters = 3,
-}
-
-pub enum Kind {
+pub enum Variant {
     I,
     O,
     T,
@@ -54,30 +62,66 @@ pub enum Kind {
     S,
     Z,
 }
+impl From<Variant> for usize {
+    fn from(value: Variant) -> Self {
+        value as usize
+    }
+}
 
-const I: [[Position; 4]; 4] = [
+type Variants = [Rotations; 7];
+type Rotations = [Segments; 4];
+type Segments = [PositionRelativeToOrigin; 4];
+type PositionRelativeToOrigin = Vec2;
+
+// TODO: fill the other shapes
+const TETRONOMINOES: Variants = [
+    // I = 0
     [
-        Position(-1, 0),
-        Position(0, 0),
-        Position(1, 0),
-        Position(2, 0),
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
     ],
+    // O = 1
     [
-        Position(0, -2),
-        Position(0, -1),
-        Position(0, 0),
-        Position(0, 1),
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
     ],
+    // T = 2
     [
-        Position(-2, 0),
-        Position(-1, 0),
-        Position(0, 0),
-        Position(1, 0),
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
     ],
+    // J = 3
     [
-        Position(0, -1),
-        Position(0, 0),
-        Position(0, 1),
-        Position(0, 2),
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+    ],
+    // L = 4
+    [
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+    ],
+    // S = 5
+    [
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
+    ],
+    // Z = 6
+    [
+        [vec2(-1, 0), vec2(0, 0), vec2(1, 0), vec2(2, 0)],
+        [vec2(0, -2), vec2(0, -1), vec2(0, 0), vec2(0, 1)],
+        [vec2(-2, 0), vec2(-1, 0), vec2(0, 0), vec2(1, 0)],
+        [vec2(0, -1), vec2(0, 0), vec2(0, 1), vec2(0, 2)],
     ],
 ];

@@ -1,35 +1,40 @@
 #![warn(clippy::pedantic)]
+#![allow(dead_code, unused_imports)]
 
-mod engine_wrapper;
 mod map;
+mod my_engine;
 mod tetronominoes;
 
-use engine_wrapper::MyEngine;
+use console_engine::Color;
 use map::Map;
+use my_engine::MyEngine;
 use tetronominoes::Tetronomino;
 
-fn main() {
-    let mut eng: MyEngine;
-    match MyEngine::init(30, 20, 2) {
-        Ok(my_engine) => eng = my_engine,
-        Err(e) => panic!("We're having problems initialising the engine: {:?}", e),
-    }
+use crate::{
+    my_engine::{vec2, Drawable, Vec2},
+    tetronominoes::{Rotation, Variant},
+};
 
-    let mut tet: Tetronomino = Tetronomino::new();
-    let map: Map = Map {
-        height: 10,
-        width: 10,
+fn main() {
+    let mut engine = match MyEngine::init(30, 20, 2) {
+        Ok(my_engine) => my_engine,
+        Err(e) => panic!("We're having problems initialising the engine: {e}"),
     };
 
-    for _i in 0..10 {
-        tet.rot_left();
+    let mut map = Map::empty(10, 10);
+    let mut tet = Tetronomino::new(vec2::vec2(2, 2));
 
-        eng.clear();
+    loop {
+        engine.clear_canvas();
 
-        eng.draw(&map);
-        eng.draw(&tet);
+        engine.set_pixels(map.get_pixels());
+        // engine.set_pixels(tet.get_pixels());
+        engine.set_shape(&tet);
 
-        eng.update_frame();
-        eng.wait_frame();
+        engine.draw();
+
+        engine.process_input();
+
+        tet.rotate_left();
     }
 }
